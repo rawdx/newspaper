@@ -1,5 +1,5 @@
 package com.newspaper.services;
 
-public interface AuthInterface {
+public interface LogInInterface {
 
 }
