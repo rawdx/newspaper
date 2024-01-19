@@ -13,12 +13,12 @@ public class User {
 	private boolean isAdmin;
 	
 	
-	public User(String email, String credential) {
+	public User(String email, String credential, String name, String phoneNumber) {
 		super();
 		this.email = email;
 		this.credential = credential;
-		this.name = null;
-		this.phoneNumber = null;
+		this.name = name;
+		this.phoneNumber = phoneNumber;
 		this.profilePicture = null;
 		this.isSuscribed = false;
 		this.isWriter = false;

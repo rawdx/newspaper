@@ -1,5 +1,10 @@
 package com.newspaper.services;
 
-public interface LogInInterface {
+import com.newspaper.models.User;
 
+import reactor.core.publisher.Mono;
+
+public interface LogInInterface {
+	
+	Mono<Boolean> loginUser(User user);
 }
