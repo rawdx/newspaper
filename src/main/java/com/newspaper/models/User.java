@@ -13,6 +13,17 @@ public class User {
 	private boolean isAdmin;
 	
 	
+	
+	public User() {
+		super();
+	}
+
+	public User(String email, String credential) {
+		super();
+		this.email = email;
+		this.credential = credential;
+	}
+
 	public User(String email, String credential, String name, String phoneNumber) {
 		super();
 		this.email = email;

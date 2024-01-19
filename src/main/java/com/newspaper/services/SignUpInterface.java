@@ -4,7 +4,7 @@ import com.newspaper.models.User;
 
 import reactor.core.publisher.Mono;
 
-public interface AuthInterface {
+public interface SignUpInterface {
 	Mono<Boolean> signUpUser(User user);
 
 

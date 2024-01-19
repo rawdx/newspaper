@@ -1,8 +1,5 @@
 package com.newspaper.services;
 
-import java.text.MessageFormat;
-
-import org.apache.logging.log4j.message.Message;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -14,13 +11,13 @@ import com.newspaper.models.User;
 
 import reactor.core.publisher.Mono;
 
-public class AuthImpl implements AuthInterface {
+public class SignUpImpl implements SignUpInterface {
 
 	private static final String SIGNUP_ENDPOINT = "http://localhost:8080/api/users";
 
 	private final WebClient webClient;
 
-	public AuthImpl() {
+	public SignUpImpl() {
 		this.webClient = WebClient.create();
 	}
 
@@ -29,8 +26,7 @@ public class AuthImpl implements AuthInterface {
 		try {
 			String userJson = convertUserToJson(user);
 			return sendRequest(SIGNUP_ENDPOINT, userJson)
-					.flatMap(responseEntity -> handleResponse(responseEntity, "User created successfully",
-							"Failed to create user"))
+					.flatMap(this::handleResponse)
 					.onErrorResume(WebClientResponseException.class, this::handleWebClientResponseException)
 					.doOnError(this::handleUnexpectedError);
 		} catch (JsonProcessingException e) {
@@ -53,10 +49,9 @@ public class AuthImpl implements AuthInterface {
 				.body(BodyInserters.fromValue(body)).retrieve().toBodilessEntity();
 	}
 
-	private Mono<Boolean> handleResponse(ResponseEntity<Void> responseEntity, String successMessage,
-			String failureMessage) {
+	private Mono<Boolean> handleResponse(ResponseEntity<Void> responseEntity) {
 		if (responseEntity.getStatusCode().is2xxSuccessful()) {
-			System.out.println("Request successful");
+			System.out.println("User created successfully");
 			return Mono.just(true);
 		} else {
 			System.out.println("Server response: " + responseEntity.getStatusCode());

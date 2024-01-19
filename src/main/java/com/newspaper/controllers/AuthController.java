@@ -6,34 +6,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.newspaper.models.User;
-import com.newspaper.services.AuthImpl;
-import com.newspaper.services.AuthInterface;
+import com.newspaper.services.LogInImpl;
+import com.newspaper.services.LogInInterface;
+import com.newspaper.services.SignUpImpl;
+import com.newspaper.services.SignUpInterface;
 import com.newspaper.utils.Encryptor;
 
 import reactor.core.publisher.Mono;
 
 @Controller
 public class AuthController {
-    
+
 	@GetMapping("login")
 	public String login() {
 		return "redirect:/";
 	}
 
-	@PostMapping("login")
-	public String login(@RequestParam String email, @RequestParam String password) {
-		password = Encryptor.encrypt(password);
+	@PostMapping("/login")
+	public Mono<String> login(@RequestParam String email, @RequestParam String password) {
 
-		AuthInterface authImpl = new AuthImpl();
-		
-//		return authImpl.loginUser(user).map(success -> {
-//			if (success) {
-//				return "redirect:/signupResult";
-//			} else {
-//				return "redirect:/fallo";
-//			}
-//		});
-		return null;
+		LogInInterface authImpl = new LogInImpl();
+
+		return authImpl.loginUser(email, password).map(success -> {
+			if (success) {
+				return "redirect:/aaaa";
+			} else {
+				return "redirect:/";
+			}
+		}).defaultIfEmpty("redirect:/");
 	}
 
 	@GetMapping("signup")
@@ -46,11 +46,12 @@ public class AuthController {
 			@RequestParam String firstName, @RequestParam String lastName, @RequestParam String phoneNumber) {
 		password = Encryptor.encrypt(password);
 
-		AuthInterface authImpl = new AuthImpl();
+		SignUpInterface signUpImpl = new SignUpImpl();
 
-		User user = new User(email, password, authImpl.createFullName(firstName, lastName), authImpl.processPhoneNumber(phoneNumber));
+		User user = new User(email, password, signUpImpl.createFullName(firstName, lastName),
+				signUpImpl.processPhoneNumber(phoneNumber));
 
-		return authImpl.signUpUser(user).map(success -> {
+		return signUpImpl.signUpUser(user).map(success -> {
 			if (success) {
 				return "redirect:/signupResult";
 			} else {
