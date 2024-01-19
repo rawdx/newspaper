@@ -24,6 +24,11 @@ public class SignUpImpl implements SignUpInterface {
 
     @Override
     public Mono<Boolean> signUpUser(User user) {
+//        if (!isValidEmail(user.getEmail())) {
+//            System.out.println("Invalid email address");
+//            return Mono.just(false);
+//        }
+        
         String userJson;
         try {
             userJson = convertUserToJson(user);
@@ -66,4 +71,9 @@ public class SignUpImpl implements SignUpInterface {
 		ObjectMapper objectMapper = new ObjectMapper();
 		return objectMapper.writeValueAsString(user);
 	}
+	
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email.matches(emailRegex);
+    }
 }

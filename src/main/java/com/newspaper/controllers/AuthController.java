@@ -1,6 +1,7 @@
 package com.newspaper.controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,17 +24,18 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public Mono<String> login(@RequestParam String email, @RequestParam String password) {
+	public Mono<String> login(@RequestParam String email, @RequestParam String password, Model model) {
 
 		LogInInterface authImpl = new LogInImpl();
 
 		return authImpl.loginUser(email, password).map(success -> {
 			if (success) {
-				return "redirect:/aaaa";
-			} else {
+				model.addAttribute("loggedIn", true);
 				return "redirect:/";
+			} else {
+				return "redirect:/fallologin";
 			}
-		}).defaultIfEmpty("redirect:/");
+		}).defaultIfEmpty("redirect:/fallologin");
 	}
 
 	@GetMapping("signup")
@@ -43,7 +45,8 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	public Mono<String> signup(@RequestParam String email, @RequestParam String password,
-			@RequestParam String firstName, @RequestParam String lastName, @RequestParam String phoneNumber) {
+			@RequestParam String firstName, @RequestParam String lastName, @RequestParam String phoneNumber,
+			Model model) {
 		password = Encryptor.encrypt(password);
 
 		SignUpInterface signUpImpl = new SignUpImpl();
@@ -52,11 +55,12 @@ public class AuthController {
 				signUpImpl.processPhoneNumber(phoneNumber));
 
 		return signUpImpl.signUpUser(user).map(success -> {
-			if (success) {
-				return "redirect:/signupResult";
-			} else {
-				return "redirect:/fallo";
-			}
-		});
+	        if (success) {
+	            model.addAttribute("signedUp", true);
+	            return "redirect:/";
+	        } else {
+	            return "redirect:/fallosignup";
+	        }
+	    });
 	}
 }
