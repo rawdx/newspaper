@@ -48,7 +48,7 @@ public class AuthController {
 
 		SignUpInterface signUpImpl = new SignUpImpl();
 
-		User user = new User(email, password, signUpImpl.createFullName(firstName, lastName),
+		User user = new User(email, password, signUpImpl.processFullName(firstName, lastName),
 				signUpImpl.processPhoneNumber(phoneNumber));
 
 		return signUpImpl.signUpUser(user).map(success -> {

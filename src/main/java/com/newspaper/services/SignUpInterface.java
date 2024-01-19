@@ -11,5 +11,5 @@ public interface SignUpInterface {
 	String processPhoneNumber(String phoneNumber);
 
 
-	String createFullName(String firstName, String lastName);
+	String processFullName(String firstName, String lastName);
 }

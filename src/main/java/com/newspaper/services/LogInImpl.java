@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import com.newspaper.models.User;
 import com.newspaper.utils.Encryptor;
+import com.newspaper.utils.ErrorHandler;
 
 import reactor.core.publisher.Mono;
 
@@ -25,8 +26,8 @@ public class LogInImpl implements LogInInterface {
         String loginEndpoint = MessageFormat.format(LOGIN_ENDPOINT, email);
         return sendRequest(loginEndpoint)
                 .flatMap(serverUser -> compareUsers(email, password, serverUser))
-                .onErrorResume(WebClientResponseException.class, this::handleWebClientResponseException)
-                .doOnError(this::handleUnexpectedError);
+                .onErrorResume(WebClientResponseException.class, ErrorHandler::handleWebClientResponseException)
+                .doOnError(ErrorHandler::handleUnexpectedError);
     }
     
 	private Mono<User> sendRequest(String endpoint) {
@@ -42,14 +43,4 @@ public class LogInImpl implements LogInInterface {
             return Mono.just(false);
         }
     }
-
-	private Mono<Boolean> handleWebClientResponseException(WebClientResponseException e) {
-		System.err.println("WebClient error - status code: " + e.getStatusCode());
-		return Mono.just(false);
-	}
-
-	private void handleUnexpectedError(Throwable e) {
-		System.err.println("Unexpected error occurred: " + e.getMessage());
-	}
-
 }
