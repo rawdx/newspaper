@@ -1,0 +1,14 @@
+<header>
+	<!-- Header for Logged Out Users -->
+	<div th:unless="${session.loggedIn}">
+		<h1>Welcome to My Website</h1>
+		<p>Logged In: <span th:text="${session.loggedIn}"></span></p>
+		<!-- Add any other content you want to display for logged-out users -->
+	</div>
+
+	<!-- Header for Logged In Users -->
+	<div th:if="${session.loggedIn}">
+		<a th:href="@{/logout}">Logout</a>
+		<!-- Add any other content you want to display for logged-in users -->
+	</div>
+</header>

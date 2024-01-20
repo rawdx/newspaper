@@ -59,7 +59,6 @@ public class SignUpImpl implements SignUpInterface {
 
     private Mono<Boolean> handleResponse(ResponseEntity<Void> responseEntity) {
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            System.out.println("User created successfully");
             return Mono.just(true);
         } else {
             System.out.println("Server response: " + responseEntity.getStatusCode());

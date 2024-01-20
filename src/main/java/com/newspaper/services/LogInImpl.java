@@ -27,7 +27,11 @@ public class LogInImpl implements LogInInterface {
         return sendRequest(loginEndpoint)
                 .flatMap(serverUser -> compareUsers(email, password, serverUser))
                 .onErrorResume(WebClientResponseException.class, ErrorHandler::handleWebClientResponseException)
-                .doOnError(ErrorHandler::handleUnexpectedError);
+                .doOnError(ErrorHandler::handleUnexpectedError)
+                .defaultIfEmpty(false)
+                .doOnTerminate(() -> {
+                	ErrorHandler.handleLoginTerminate(email);
+                });
     }
     
 	private Mono<User> sendRequest(String endpoint) {
@@ -36,10 +40,8 @@ public class LogInImpl implements LogInInterface {
 
     private Mono<Boolean> compareUsers(String email, String password, User serverUser) {
         if (serverUser != null && Encryptor.verifyPassword(password, serverUser.getCredential())) {
-            System.out.println("User logged in successfully");
             return Mono.just(true);
         } else {
-            System.out.println("Login failed - Invalid credentials");
             return Mono.just(false);
         }
     }
