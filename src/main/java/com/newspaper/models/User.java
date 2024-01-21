@@ -27,6 +27,7 @@ public class User {
 
 	public User(String email, String credential, String name, String phoneNumber) {
 		super();
+		this.idUser = 0;
 		this.email = email;
 		this.credential = credential;
 		this.name = name;

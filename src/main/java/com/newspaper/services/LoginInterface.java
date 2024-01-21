@@ -2,7 +2,7 @@ package com.newspaper.services;
 
 import reactor.core.publisher.Mono;
 
-public interface LogInInterface {
+public interface LoginInterface {
 
 	Mono<Boolean> loginUser(String email, String password);
 }

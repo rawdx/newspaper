@@ -11,13 +11,13 @@ import com.newspaper.utils.ErrorHandler;
 
 import reactor.core.publisher.Mono;
 
-public class LogInImpl implements LogInInterface {
+public class LoginImpl implements LoginInterface {
 
 	private static final String LOGIN_ENDPOINT = "http://localhost:8080/api/users/{0}";
 
 	private final WebClient webClient;
 
-	public LogInImpl() {
+	public LoginImpl() {
 		this.webClient = WebClient.create();
 	}
 	
