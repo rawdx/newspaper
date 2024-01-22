@@ -2,8 +2,10 @@ package com.newspaper.services;
 
 import com.newspaper.models.User;
 
+import reactor.core.publisher.Mono;
+
 public interface EmailVerificationInterface {
 
-	void sendVerificationEmail(User user);
+	Mono<Void> sendVerificationEmail(User user);
 
 }

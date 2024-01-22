@@ -57,8 +57,7 @@ public class AuthController {
 	@PostMapping("/signup")
 	public Mono<String> signup(@RequestParam String email, @RequestParam String password,
 			@RequestParam String firstName, @RequestParam String lastName, @RequestParam String phoneNumber,
-			HttpSession session, SignUpImpl signUpImpl, EmailVerificationImpl emailVerification,
-			@Qualifier("javaMailSender") JavaMailSender javaMailSender) {
+			HttpSession session, SignUpImpl signUpImpl, EmailVerificationImpl emailVerification) {
 		password = Encryptor.encrypt(password);
 
 		String name = signUpImpl.processFullName(firstName, lastName);
@@ -66,14 +65,19 @@ public class AuthController {
 
 		User user = new User(email, password, name, phone);
 
-		return signUpImpl.signUpUser(user).map(success -> {
-			if (success) {
-				session.setAttribute("loggedIn", true);
-				System.out.println("User created successfully: " + email);
-				emailVerification.sendVerificationEmail(user);
-				return "redirect:/";
-			} else {
-				return "redirect:/";
+	    return signUpImpl.signUpUser(user).flatMap(success -> {
+	        if (success) {
+	            session.setAttribute("loggedIn", true);
+	            System.out.println("User created successfully: " + email);
+	            return emailVerification.sendVerificationEmail(user)
+	                    .then(Mono.just("redirect:/"))
+	                    .onErrorResume(error -> {
+	                        // Handle the error (log or take appropriate action)
+	                        System.err.println("Error sending verification email: " + error.getMessage());
+	                        return Mono.just("redirect:/");
+	                    });
+	        } else {
+	            return Mono.just("redirect:/");
 			}
 		});
 	}
